@@ -14,8 +14,49 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from argparse import ArgumentParser
+from serial import Serial
+from time import sleep
+
+def read_code(path):
+    code = 'IN;'
+    with open(path, 'r') as f:
+        code = f.read()
+    return code
+
+def check_avail(serial):
+    serial.write(b'\x1B.B')
+    b = serial.read()
+    n = 0
+    while b != b'\r':
+        if len(b) == 0:
+            continue
+        n = n * 10 + b[0] - 48
+        b = serial.read()
+    return n
+
 def main():
-    pass
+    parser = ArgumentParser()
+    parser.add_argument('port')
+    parser.add_argument('file')
+    args = parser.parse_args()
+
+    serial = Serial(port=args.port, timeout=0)
+    code = read_code(args.file)
+    pos = 0
+
+    while pos < len(code):
+        avail = check_avail(serial)
+        if avail < 512:
+            sleep(0.01)
+            continue
+
+        end = pos + avail
+        if len(code)-pos < avail:
+            end = len(code)
+
+        serial.write(code[pos:end].encode('utf-8'))
+        pos = end
 
 if __name__ == '__main__':
     main()
