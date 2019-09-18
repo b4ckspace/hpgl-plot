@@ -26,13 +26,13 @@ def read_code(path):
 
 def check_avail(serial):
     serial.write(b'\x1B.B')
-    b = serial.read()
+    b = b''
     n = 0
     while b != b'\r':
+        b = serial.read()
         if len(b) == 0:
             continue
         n = n * 10 + b[0] - 48
-        b = serial.read()
     return n
 
 def main():
