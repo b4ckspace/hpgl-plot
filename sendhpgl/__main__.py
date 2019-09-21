@@ -29,10 +29,9 @@ def check_avail(serial):
     b = b''
     n = 0
     while b != b'\r':
+        if len(b) > 0:
+            n = n * 10 + b[0] - 48
         b = serial.read()
-        if len(b) == 0:
-            continue
-        n = n * 10 + b[0] - 48
     return n
 
 def main():
