@@ -34,6 +34,12 @@ def check_avail(serial):
         b = serial.read()
     return n
 
+def show_progress(pos, total, length=100):
+    fill = length * pos // total
+    print('\rProgress: [' + fill * '\u2588' + (length-fill) * '\u2591' + '] ' + str(pos) + ' of ' + str(total) + ' bytes sent', end='\r')
+    if pos == total:
+        print()
+
 def main():
     parser = ArgumentParser()
     parser.add_argument('port')
@@ -44,6 +50,7 @@ def main():
     code = read_code(args.file)
     pos = 0
 
+    show_progress(pos, len(code))
     while pos < len(code):
         avail = check_avail(serial)
         if avail < 512:
@@ -56,6 +63,8 @@ def main():
 
         serial.write(code[pos:end].encode('utf-8'))
         pos = end
+
+        show_progress(pos, len(code))
 
 if __name__ == '__main__':
     main()
