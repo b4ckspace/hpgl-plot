@@ -4,6 +4,8 @@ Python module to send HP-GL code to a 7475A plotter
 
 ## Installation
 
+## Linux
+
 Clone this repository and `cd` into the directory:
 
 ```
@@ -24,17 +26,44 @@ To install the sendhpgl module along with its deps, run:
 pip install .
 ```
 
+## Windows
+
+Clone this repository and `cd` into the directory:
+
+```
+git clone https://github.com/b4ckspace/hpgl-plot
+cd hpgl-plot
+```
+
+You should install the module and its dependencies in a Python virtual environment. To create and enter one, execute:
+
+```
+python -m venv env
+env\Scripts\activate
+```
+
+To install the sendhpgl module along with its deps, run:
+
+```
+pip install .
+```
+
+
 ## Usage
 
 The module takes two arguments:
 
-* The serial port your plotter is connected to (probably /dev/ttyUSB0)
+* The serial port your plotter is connected to (probably /dev/ttyUSB0) or COM.. for Windows
 * The path to your .hpgl file
 
 To run it, execute the following while inside the venv:
-
+eg Linux
 ```
 sendhpgl /dev/ttyUSB0 path/to/file.hpgl
+```
+Windows 
+```
+sendhpgl COM3 path\to\file.hpgl
 ```
 
 Your device should now start plotting.
